@@ -1,11 +1,14 @@
 h1 {
-    color:red;
+    color:rgb(83, 83, 11);
 }
 
 #myCanvas {
     border: 1px solid black;
     background-color: lightgray;
-    /*background-image: url("../assets/images/mario.png");*/
+    background-image: url("../assets/images/Spongebob1.jpg");
+    background-size: cover;
+    width: 1200px;
+    height: 800px;
 }
 
 video {
