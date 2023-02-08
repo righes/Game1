@@ -36,4 +36,45 @@ let level2 = {
 }
 tabNiveaux.push(level2);
 
+let sortieLevel3 = new Sortie(600, 300, 40, "red");
+
+let level3 = {
+    objetsGraphiques: [
+        sortieLevel3,
+        new ObstacleAnime(200, 200, 50, 50, 'blue', 2),
+        new ObstacleAnime(300, 0, 100, 300, 'purple', -1),
+        new Obstacle(100, 100, 75, 75, 'pink'),
+        new Obstacle(500, 300, 25, 100, 'brown'),
+        new ObstacleAnime(0, 400, 50, 50, 'gray', 3)
+    ],
+    sortie: sortieLevel3,
+    temps: 45,
+    titre : "Niveau 3",
+    description: "Maintenant, c'est sérieux !",
+    background: "space",
+    musique: "adventure"
+}
+tabNiveaux.push(level3);
+
+let sortieLevel4 = new Sortie(600, 600, 20, "purple");
+
+let level4 = {
+    objetsGraphiques: [
+        sortieLevel4,
+        new ObstacleAnime(100, 100, 100, 100, 'blue', 3),
+        new ObstacleAnime(500, 500, 150, 150, 'pink', -2),
+        new ObstacleAnime(300, 0, 50, 300, 'brown', 1),
+        new Obstacle(200, 200, 75, 75, 'gray'),
+        new ObstacleAnime(0, 400, 50, 50, 'red', 4),
+        new ObstacleAnime(400, 400, 25, 25, 'green', -5)
+    ],
+    sortie: sortieLevel4,
+    temps: 30,
+    titre : "Niveau 4",
+    description: "C'est du sérieux !",
+    background: "fire",
+    musique: "danger"
+}
+tabNiveaux.push(level4);
+
 export { tabNiveaux }

@@ -13,14 +13,16 @@ import { tabNiveaux } from './levels.js';
 
 let canvas, ctx;
 let gameState = 'menuStart';
-let joueur, sortie;
+let joueur, sortie, luk;
 let niveau = 0;
 let tableauDesObjetsGraphiques = [];
 let assets;
 
+
 var assetsToLoadURLs = {
-    joueur: { url: '../assets/images/mario.png' }, // http://www.clipartlord.com/category/weather-clip-art/winter-clip-art/
+    joueur: { url: '../assets/images/isfanja.png' }, // http://www.clipartlord.com/category/weather-clip-art/winter-clip-art/
     bgn1: { url: '../assets/images/bgn1.jpg' }, // http://www.clipartlord.com/category/weather-clip-art/winter-clip-art/
+    kjkj: { url: '../assets/images/pean.png' },
     backgroundImage: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/images/background.png' }, // http://www.clipartlord.com/category/weather-clip-art/winter-clip-art/
     logo1: { url: "https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/images/SkywardWithoutBalls.png" },
     logo2: { url: "https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/images/BoundsWithoutBalls.png" },
@@ -31,8 +33,8 @@ var assetsToLoadURLs = {
     humbug: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/sounds/humbug.mp3', buffer: true, loop: true, volume: 0.5 },
     concertino: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/sounds/christmas_concertino.mp3', buffer: true, loop: true, volume: 1.0 },
     xmas: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/sounds/xmas.mp3', buffer: true, loop: true, volume: 0.6 },
-    backinblack: { url: '../assets/audio/backinblack.m4a', buffer: true, loop: true, volume: 0.5 }
-
+    backinblack: { url: '../assets/audio/backinblack.m4a', buffer: true, loop: true, volume: 0.5 },
+    songsong: { url: '../assets/audio/MBC.mp3', buffer: true, loop: true, volume: 0.6 }
 };
 
 // Bonne pratique : on attend que la page soit chargée
@@ -50,11 +52,13 @@ function init(event) {
     loadAssets(assetsToLoadURLs, startGame);
 
     //startGame();
+    //songsong
+    
 }
 
 function startGame(assetsLoaded) {
     assets = assetsLoaded;
-
+    assets.songsong.play();
     // appelée quand tous les assets sont chargés
     console.log("StartGame : tous les assets sont chargés");
     //assets.backinblack.play();
@@ -81,6 +85,7 @@ function demarreNiveau(niveau) {
     tableauDesObjetsGraphiques = [...tabNiveaux[niveau].objetsGraphiques];  
     // On crée le joueur   
      joueur = new Joueur(100, 0, 50, 50, assets.joueur, 3);
+     
      sortie = tabNiveaux[niveau].sortie;
      // et on l'ajoute au tableau des objets graphiques
      tableauDesObjetsGraphiques.push(joueur);

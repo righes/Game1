@@ -1,3 +1,4 @@
+//ecouteurs.js:
 let inputState = {}
 let mousePos = { x: 0, y: 0 }
 
