@@ -56,25 +56,52 @@ let level3 = {
 }
 tabNiveaux.push(level3);
 
-let sortieLevel4 = new Sortie(600, 600, 20, "purple");
+//why those levles doesn't work
+let sortieLevel4 = new Sortie(800, 500, 60, "yellow");
 
 let level4 = {
     objetsGraphiques: [
         sortieLevel4,
-        new ObstacleAnime(100, 100, 100, 100, 'blue', 3),
-        new ObstacleAnime(500, 500, 150, 150, 'pink', -2),
-        new ObstacleAnime(300, 0, 50, 300, 'brown', 1),
-        new Obstacle(200, 200, 75, 75, 'gray'),
-        new ObstacleAnime(0, 400, 50, 50, 'red', 4),
-        new ObstacleAnime(400, 400, 25, 25, 'green', -5)
+        new ObstacleAnime(200, 200, 50, 50, 'blue', 2),
+        new ObstacleAnime(300, 0, 100, 300, 'purple', -1),
+        new Obstacle(100, 100, 75, 75, 'pink'),
+        new Obstacle(500, 300, 25, 100, 'brown'),
+        new ObstacleAnime(0, 400, 50, 50, 'gray', 3),
+        new ObstacleAnime(600, 100, 75, 75, 'cyan', 1),
+        new Obstacle(200, 500, 50, 50, 'orange'),
+        new Obstacle(700, 400, 40, 40, 'black')
     ],
     sortie: sortieLevel4,
-    temps: 30,
+    temps: 60,
     titre : "Niveau 4",
-    description: "C'est du sérieux !",
-    background: "fire",
-    musique: "danger"
+    description: "C'est de plus en plus difficile !",
+    background: "forest",
+    musique: "excitement"
 }
 tabNiveaux.push(level4);
+
+let sortieLevel5 = new Sortie(800, 500, 60, "yellow");
+
+let level5 = {
+    objetsGraphiques: [
+        sortieLevel5,
+        new ObstacleAnime(200, 200, 50, 50, 'blue', 2),
+        new ObstacleAnime(300, 0, 100, 300, 'purple', -1),
+        new Obstacle(100, 100, 75, 75, 'pink'),
+        new Obstacle(500, 300, 25, 100, 'brown'),
+        new ObstacleAnime(0, 400, 50, 50, 'gray', 3),
+        new ObstacleAnime(600, 100, 75, 75, 'cyan', 1),
+        new Obstacle(200, 500, 50, 50, 'orange'),
+        new Obstacle(700, 400, 40, 40, 'black')
+    ],
+    sortie: sortieLevel5,
+    temps: 60,
+    titre : "Niveau 5",
+    description: "Continuez à progresser !",
+    background: "forest",
+    musique: "excitement"
+}
+tabNiveaux.push(level5);
+
 
 export { tabNiveaux }

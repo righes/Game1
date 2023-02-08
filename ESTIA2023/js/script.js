@@ -19,6 +19,7 @@ let tableauDesObjetsGraphiques = [];
 let assets;
 
 
+
 var assetsToLoadURLs = {
     joueur: { url: '../assets/images/isfanja.png' }, // http://www.clipartlord.com/category/weather-clip-art/winter-clip-art/
     bgn1: { url: '../assets/images/bgn1.jpg' }, // http://www.clipartlord.com/category/weather-clip-art/winter-clip-art/
@@ -290,8 +291,64 @@ function niveauSuivant() {
     console.log("Niveau suivant !");
     // on arre^te la musique du niveau courant
     let nomMusique = tabNiveaux[niveau].musique; 
-    assets[nomMusique].stop();    
+    //assets[nomMusique].stop();    
     // et on passe au niveau suivant
     niveau++;
     demarreNiveau(niveau);
 }
+let GF = function(){
+    // vars for counting frames/s, used by the measureFPS function
+    let frameCount = 0;
+    let lastTime;
+    let fpsContainer;
+    let fps; 
+  
+    let measureFPS = function(newTime){
+      
+         // test for the very first invocation
+         if(lastTime === undefined) {
+           lastTime = newTime; 
+           return;
+         }
+      
+        //calculate the difference between last & current frame
+        let diffTime = newTime - lastTime; 
+
+        if (diffTime >= 1000) {
+            fps = frameCount;    
+            frameCount = 0;
+            lastTime = newTime;
+        }
+
+        //and display it in an element we appended to the 
+        // document in the start() function
+       fpsContainer.innerHTML = 'FPS: ' + fps; 
+       frameCount++;
+    };
+  
+    let mainLoop = function(time){
+        //main function, called each frame 
+        measureFPS(time);
+        
+        // call the animation loop every 1/60th of second
+        requestAnimationFrame(mainLoop);
+    };
+
+    let start = function(){
+        // adds a div for displaying the fps value
+        fpsContainer = document.createElement('div');
+        document.body.appendChild(fpsContainer);
+
+        requestAnimationFrame(mainLoop);
+    };
+
+    //our GameFramework returns a public API visible from outside its scope
+    return {
+        start: start
+    };
+};
+
+let game = new GF();
+game.start();
+
+
