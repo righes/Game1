@@ -16,7 +16,7 @@ function loadAssets(assetsURL, callback) {
     files have been loaded and decoded 
  ############################## */
 function isImage(url) {
-    return (url.match(/\.(jpeg|jpg|gif|png)$/) != null);
+    return (url.match(/\.(jpeg|jpg|gif|png|webp)$/) != null);
 }
 
 function isAudio(url) {
