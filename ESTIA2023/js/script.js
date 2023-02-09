@@ -7,6 +7,7 @@ import { ajouteEcouteurSouris, ajouteEcouteursClavier, inputState, mousePos } fr
 import { circRectsOverlap, rectsOverlap } from './collisions.js';
 import { loadAssets } from './assets.js';
 import Sortie from './Sortie.js';
+import Balle from './Ball.js';
 
 import { tabNiveaux } from './levels.js';
 
@@ -17,6 +18,11 @@ let joueur, sortie, luk;
 let niveau = 0;
 let tableauDesObjetsGraphiques = [];
 let assets;
+let w, h;
+
+// Les balles
+let tableauDesBalles = [];
+let tableauDesObstacles = [];
 
 
 
@@ -48,23 +54,31 @@ function init(event) {
     //console.log(canvas);
     // pour dessiner, on utilise le contexte 2D
     ctx = canvas.getContext('2d');
-
+    w = canvas.width;
+    h = canvas.height;
     // chargement des assets (musique,  images, sons)
     loadAssets(assetsToLoadURLs, startGame);
 
     //startGame();
-    //songsong
+    
+    
+    
     
 }
 
 function startGame(assetsLoaded) {
     assets = assetsLoaded;
+    //backgrtoun music
     assets.songsong.play();
     // appelée quand tous les assets sont chargés
     console.log("StartGame : tous les assets sont chargés");
     //assets.backinblack.play();
-
+    
    // On va prendre en compte le clavier
+    // Créer des balles
+    
+    creerDesObstaclesLevel1();
+
    ajouteEcouteursClavier();
    ajouteEcouteurSouris();
 
@@ -86,7 +100,7 @@ function demarreNiveau(niveau) {
     tableauDesObjetsGraphiques = [...tabNiveaux[niveau].objetsGraphiques];  
     // On crée le joueur   
      joueur = new Joueur(100, 0, 50, 50, assets.joueur, 3);
-     
+     creerDesBalles(10);
      sortie = tabNiveaux[niveau].sortie;
      // et on l'ajoute au tableau des objets graphiques
      tableauDesObjetsGraphiques.push(joueur);
@@ -142,7 +156,11 @@ function animationLoop() {
             tableauDesObjetsGraphiques.forEach(o => {
                 o.draw(ctx);
             });
-
+            //b1.draw();
+            dessinerLesBalles();
+            //dessinerLesObstacles();
+            // 3) On déplace le monstre
+            deplaceLesBalles();
             // 3 - on déplace les objets
             testeEtatClavierPourJoueur();
 
@@ -294,61 +312,96 @@ function niveauSuivant() {
     //assets[nomMusique].stop();    
     // et on passe au niveau suivant
     niveau++;
+    ctx.save();
     demarreNiveau(niveau);
 }
-let GF = function(){
-    // vars for counting frames/s, used by the measureFPS function
-    let frameCount = 0;
-    let lastTime;
-    let fpsContainer;
-    let fps; 
+// ------------------ MODELES POUR LES BALLES
+  //dessiner les ball
+  function dessinerLesBalles() {
+    // Méthode 1
+    for(var i = 0; i < tableauDesBalles.length; i++) {
+      var b = tableauDesBalles[i];
+      b.draw(ctx);
+    }
+   
+  }
+  //deplacer les ball
+  function deplaceLesBalles() {
+    // Méthode 1
+    var collision = false;
+    
+   tableauDesBalles.forEach((b, index) => {
+      b.move();
+     
+      // tester Collisions avec les murs
+     if((b.x+b.r) > w) {
+       b.speedX = -b.speedX;
+       b.x = w-b.r;
+     }
+     if((b.x-b.r) < 0) {
+       b.speedX = -b.speedX;
+       b.x = b.r;
+     }
+     if((b.y+b.r) > h) {
+       b.speedY = -b.speedY;
+       b.y = h - b.r;
+     }
+     if((b.y-b.r) < 0) {
+       b.speedY = -b.speedY;
+       b.y = b.r;
+     }
+     /*
+      if(testBallObstacle(b)) {
+      console.log(" ###### COLLISION");
+     }  
+     if(testRectObstacle(monstre)) {
+      console.log("COLLISION11");
+     }
+     */
+     // Ici test de collision avec le monstre
+    
   
-    let measureFPS = function(newTime){
-      
-         // test for the very first invocation
-         if(lastTime === undefined) {
-           lastTime = newTime; 
-           return;
-         }
-      
-        //calculate the difference between last & current frame
-        let diffTime = newTime - lastTime; 
-
-        if (diffTime >= 1000) {
-            fps = frameCount;    
-            frameCount = 0;
-            lastTime = newTime;
-        }
-
-        //and display it in an element we appended to the 
-        // document in the start() function
-       fpsContainer.innerHTML = 'FPS: ' + fps; 
-       frameCount++;
-    };
+     if(circRectsOverlap(joueur.x, joueur.y, joueur.l, joueur.h, b.x, b.y, b.r)) {
+       collision = true;
+     }
+    });
+     /*
+     // Si il y a au moins une collision on change la couleur
+     if(collision) {
+       joueur.couleur = "white";
+     } else {
+       joueur.couleur = "black";
+     }*/
+    
+  }
+  //creer des ball
+   function creerDesBalles(n) {
+    var tabCouleur = ["red", "orange", "green"];
+    
+    for(var i = 0; i < n; i++) {
+      var x = Math.random() * w; // entre 0 et largeur du canvas
+      var y = Math.random() * h; // entre 0 et heuteur du canvas
+      var rayon = 10 + 10*Math.random();
+      var numCouleur = Math.round(Math.random() * tabCouleur.length);
+      var couleur = tabCouleur[numCouleur];
+      var speedX = Math.random() * 5;
+      var speedY = Math.random() * 5;
   
-    let mainLoop = function(time){
-        //main function, called each frame 
-        measureFPS(time);
-        
-        // call the animation loop every 1/60th of second
-        requestAnimationFrame(mainLoop);
-    };
+      var b = new Balle(x, y, rayon, couleur, speedX, speedY);
+      
+      // Vérifier qu'elle n'est pas sur le
+      // monstre
+      if(circRectsOverlap(joueur.x, joueur.y, joueur.l, joueur.h, b.x, b.y, b.r*5)) {
+        i--;
+      } else {
+      // tableauDesBalles[i] = b;
+        tableauDesBalles.push(b);
+      }
+    }
+  }
 
-    let start = function(){
-        // adds a div for displaying the fps value
-        fpsContainer = document.createElement('div');
-        document.body.appendChild(fpsContainer);
 
-        requestAnimationFrame(mainLoop);
-    };
 
-    //our GameFramework returns a public API visible from outside its scope
-    return {
-        start: start
-    };
-};
-
-let game = new GF();
 game.start();
 
 
