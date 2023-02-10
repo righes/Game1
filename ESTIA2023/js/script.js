@@ -10,10 +10,11 @@ import Sortie from './Sortie.js';
 import Balle from './Ball.js';
 
 import { tabNiveaux } from './levels.js';
-
+import Timer from './Timer.js';
 
 let canvas, ctx;
 let gameState = 'menuStart';
+let timer;
 let joueur, sortie, luk;
 let niveau = 0;
 let tableauDesObjetsGraphiques = [];
@@ -28,17 +29,17 @@ let tableauDesObstacles = [];
 
 
 var assetsToLoadURLs = {
-    joueur: { url: '../assets/images/isfanja.png'}, // http://www.clipartlord.com/category/weather-clip-art/winter-clip-art/
+    joueur: { url: './assets/images/isfanja.png'}, // http://www.clipartlord.com/category/weather-clip-art/winter-clip-art/
     backgroundImage: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/images/background.png' }, // http://www.clipartlord.com/category/weather-clip-art/winter-clip-art/
     plop: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/sounds/plop.mp3', buffer: false, loop: false, volume: 1.0 },
-    victory: { url: '../assets/audio/victory.wav', buffer: false, loop: false, volume: 1.0 },
+    victory: { url: './assets/audio/victory.wav', buffer: false, loop: false, volume: 1.0 },
     humbug: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/sounds/humbug.mp3', buffer: true, loop: true, volume: 0.5 },
     concertino: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/sounds/christmas_concertino.mp3', buffer: true, loop: true, volume: 1.0 },
     xmas: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/sounds/xmas.mp3', buffer: true, loop: true, volume: 0.6 },
-    backinblack: { url: '../assets/audio/backinblack.m4a', buffer: true, loop: true, volume: 0.5 },
-    songsong: { url: '../assets/audio/MBC.mp3', buffer: true, loop: true, volume: 0.6 },
-    dar: { url: '../assets/images/house.png'}, // http://www.clipartlord.com/category/weather-clip-art/winter-clip-art/
-    fish: { url: '../assets/images/fish.png'},
+    backinblack: { url: './assets/audio/backinblack.m4a', buffer: true, loop: true, volume: 0.5 },
+    songsong: { url: './assets/audio/MBC.mp3', buffer: true, loop: true, volume: 0.6 },
+    dar: { url: './assets/images/house.png'}, // http://www.clipartlord.com/category/weather-clip-art/winter-clip-art/
+    fish: { url: './assets/images/fish.png'},
 };
 
 // Bonne pratique : on attend que la page soit chargée
@@ -65,6 +66,8 @@ function init(event) {
 
 function startGame(assetsLoaded) {
     assets = assetsLoaded;
+    timer = new Timer("decompte");
+
     //backgrtoun music
     //assets.songsong.play();
     // appelée quand tous les assets sont chargés
@@ -91,7 +94,9 @@ function demarreNiveau(niveau) {
         return;
     }
     // sinon on passe au niveau suivant
-
+    timer.stop();
+    timer.setTime(tabNiveaux[niveau].temps);
+    timer.start();
     // On initialise les objets graphiques qu'on va utiliser pour le niveau
     // courant avec les objets graphiques dans tabNiveaux[niveau]   
     tableauDesObjetsGraphiques = [...tabNiveaux[niveau].objetsGraphiques];
@@ -171,6 +176,7 @@ function animationLoop() {
             deplaceLesBalles();
             // 3 - on déplace les objets
             testeEtatClavierPourJoueur();
+            timer.draw(ctx, 150, 30);
 
             joueur.move();
             //joueur.followMouse()
@@ -178,6 +184,7 @@ function animationLoop() {
             detecteCollisionJoueurAvecObstacles();
             detecteCollisionJoueurAvecSortie();
             break;
+
     }
 
     // 4 - On rappelle la fonction d'animation
@@ -411,8 +418,5 @@ function afficheScore(ctx) {
     ctx.restore();
 }
 
-
-
-game.start();
 
 
