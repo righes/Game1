@@ -19,6 +19,7 @@ let niveau = 0;
 let tableauDesObjetsGraphiques = [];
 let assets;
 let w, h;
+let score = 0;
 
 // Les balles
 let tableauDesBalles = [];
@@ -150,6 +151,9 @@ function animationLoop() {
 
             // 2 - On dessine le nouveau contenu
             tableauDesObjetsGraphiques.forEach(o => {
+                if(tableauDesBalles.length === 0){
+                    sortie.active = true;
+                }
                 o.draw(ctx);
             });
             //b1.draw();
@@ -287,12 +291,15 @@ function detecteCollisionJoueurAvecObstacles() {
 }
 
 function detecteCollisionJoueurAvecSortie() {
+    if(!sortie.active) return;
     joueur.drawBoundingBox(ctx);
     sortie.drawBoundingBox(ctx);
     if (circRectsOverlap(joueur.x, joueur.y, joueur.l, joueur.h, sortie.x, sortie.y, sortie.r)) {
         joueur.x = 10;
         joueur.y = 10;
         //gameState = 'ecranDebutNiveau';
+        // ajouter une condition de toucher toutes les balles !
+
         niveauSuivant();
         sortie.couleur = 'lightgreen';
         assets.victory.play();
@@ -302,6 +309,7 @@ function detecteCollisionJoueurAvecSortie() {
 function niveauSuivant() {
 
     console.log("Niveau suivant !");
+    sortie.active = false;
     // on arre^te la musique du niveau courant
     let nomMusique = tabNiveaux[niveau].musique;
     //assets[nomMusique].stop();    
@@ -324,13 +332,7 @@ function dessinerLesBalles() {
     }
 
 }
-function removeLesBalles() {
-    
-    // Si il y a au moins une collision on affiche message sur la console 
-    if (collision) {
-        console.log("ball touche");
-    }
-}
+
 
 //deplacer les ball
 function deplaceLesBalles() {
@@ -360,6 +362,8 @@ function deplaceLesBalles() {
         //test collision avec joueur 
         if (circRectsOverlap(joueur.x, joueur.y, joueur.l, joueur.h, b.x, b.y, b.r)) {
             console.log("touche !");
+            score++;
+            console.log("score :" + score);
             tableauDesBalles.splice(index, 1);
         }
 
