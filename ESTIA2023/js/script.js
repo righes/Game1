@@ -28,13 +28,9 @@ let tableauDesObstacles = [];
 
 var assetsToLoadURLs = {
     joueur: { url: '../assets/images/isfanja.png' }, // http://www.clipartlord.com/category/weather-clip-art/winter-clip-art/
-    bgn1: { url: '../assets/images/bgn1.jpg' }, // http://www.clipartlord.com/category/weather-clip-art/winter-clip-art/
-    kjkj: { url: '../assets/images/pean.png' },
+    
+    
     backgroundImage: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/images/background.png' }, // http://www.clipartlord.com/category/weather-clip-art/winter-clip-art/
-    logo1: { url: "https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/images/SkywardWithoutBalls.png" },
-    logo2: { url: "https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/images/BoundsWithoutBalls.png" },
-    bell: { url: "https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/images/bells.png" },
-    spriteSheetBunny: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/images/bunnySpriteSheet.png' },
     plop: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/sounds/plop.mp3', buffer: false, loop: false, volume: 1.0 },
     victory: { url: '../assets/audio/victory.wav', buffer: false, loop: false, volume: 1.0 },
     humbug: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/sounds/humbug.mp3', buffer: true, loop: true, volume: 0.5 },
@@ -60,27 +56,27 @@ function init(event) {
     loadAssets(assetsToLoadURLs, startGame);
 
     //startGame();
-    
-    
-    
-    
+
+
+
+
 }
 
 function startGame(assetsLoaded) {
     assets = assetsLoaded;
     //backgrtoun music
-    assets.songsong.play();
+    //assets.songsong.play();
     // appelée quand tous les assets sont chargés
     console.log("StartGame : tous les assets sont chargés");
     //assets.backinblack.play();
-    
-   // On va prendre en compte le clavier
+
+    // On va prendre en compte le clavier
     // Créer des balles
-    
+
     creerDesObstaclesLevel1();
 
-   ajouteEcouteursClavier();
-   ajouteEcouteurSouris();
+    ajouteEcouteursClavier();
+    ajouteEcouteurSouris();
 
     demarreNiveau(niveau);
 
@@ -88,33 +84,33 @@ function startGame(assetsLoaded) {
 }
 
 function demarreNiveau(niveau) {
-    if(niveau > tabNiveaux.length-1)  {
+    if (niveau > tabNiveaux.length - 1) {
         console.log("PLUS DE NIVEAUX !!!!!");
         niveau--;
         return;
-    } 
+    }
     // sinon on passe au niveau suivant
 
     // On initialise les objets graphiques qu'on va utiliser pour le niveau
     // courant avec les objets graphiques dans tabNiveaux[niveau]   
-    tableauDesObjetsGraphiques = [...tabNiveaux[niveau].objetsGraphiques];  
+    tableauDesObjetsGraphiques = [...tabNiveaux[niveau].objetsGraphiques];
     // On crée le joueur   
-     joueur = new Joueur(100, 0, 50, 50, assets.joueur, 3);
-     creerDesBalles(10);
-     sortie = tabNiveaux[niveau].sortie;
-     // et on l'ajoute au tableau des objets graphiques
-     tableauDesObjetsGraphiques.push(joueur);
+    joueur = new Joueur(100, 0, 50, 50, assets.joueur, 3);
+    creerDesBalles(10);
+    sortie = tabNiveaux[niveau].sortie;
+    // et on l'ajoute au tableau des objets graphiques
+    tableauDesObjetsGraphiques.push(joueur);
 
-     // on démarre la musique du niveau
-     let nomMusique = tabNiveaux[niveau].musique; 
-     //assets[nomMusique].play();
+    // on démarre la musique du niveau
+    let nomMusique = tabNiveaux[niveau].musique;
+    //assets[nomMusique].play();
 }
 
 function creerDesObstaclesLevel1() {
     tableauDesObjetsGraphiques.push(new Obstacle(250, 0, 30, 300, 'green'));
     tableauDesObjetsGraphiques.push(new ObstacleAnime(450, 0, 30, 300, 'green', 1));
     tableauDesObjetsGraphiques.push(new ObstacleAnimeClignotant(350, 0, 30, 300, 'red', 1));
-    let url ='https://img.freepik.com/free-vector/seamless-japanese-inspired-geometric-pattern_53876-80353.jpg';
+    let url = 'https://img.freepik.com/free-vector/seamless-japanese-inspired-geometric-pattern_53876-80353.jpg';
     tableauDesObjetsGraphiques.push(new ObstacleTexture(550, 0, 30, 300, url));
 }
 
@@ -144,9 +140,9 @@ function animationLoop() {
         case 'gameOver':
             afficheGameOver(ctx);
             break;
-            case 'ecranDebutNiveau':
+        case 'ecranDebutNiveau':
             afficheEcranDebutNiveau(ctx);
-                break;
+            break;
         case 'jeuEnCours':
             //ximg++;
             //ximg = ximg % canvas.width;
@@ -182,7 +178,7 @@ function afficheEcranDebutNiveau(ctx) {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'white';
     ctx.font = "40px Arial";
-    ctx.fillText("Bienvenue au niveau "+niveau, 190, 100);
+    ctx.fillText("Bienvenue au niveau " + niveau, 190, 100);
     ctx.restore();
 }
 
@@ -214,7 +210,7 @@ function afficheGameOver(ctx) {
     ctx.restore();
 }
 function testeEtatClavierPourJoueur() {
-    if(inputState.space) {
+    if (inputState.space) {
         // on saute
         joueur.saute();
     } else {
@@ -231,9 +227,9 @@ function testeEtatClavierPourJoueur() {
             if (inputState.down) joueur.vy = 5;
         }
     }
-    
 
-    
+
+
 }
 
 
@@ -304,101 +300,95 @@ function detecteCollisionJoueurAvecSortie() {
 }
 
 function niveauSuivant() {
-    // Passe au niveau suivant....
-    // todo.....
+
     console.log("Niveau suivant !");
     // on arre^te la musique du niveau courant
-    let nomMusique = tabNiveaux[niveau].musique; 
+    let nomMusique = tabNiveaux[niveau].musique;
     //assets[nomMusique].stop();    
-    // et on passe au niveau suivant
+
     niveau++;
     ctx.save();
     demarreNiveau(niveau);
 }
-// ------------------ MODELES POUR LES BALLES
-  //dessiner les ball
-  function dessinerLesBalles() {
+//------------------------------------------------------------------------------------------------------------------------
+// ------------------ MODELES POUR LES BALLES-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------
+//dessinerLesBalles // removeLesBalles // deplaceLesBalles // creerDesBalles // 
+//class :   draw // move 
+//dessiner les ball
+function dessinerLesBalles() {
     // Méthode 1
-    for(var i = 0; i < tableauDesBalles.length; i++) {
-      var b = tableauDesBalles[i];
-      b.draw(ctx);
+    for (var i = 0; i < tableauDesBalles.length; i++) {
+        var b = tableauDesBalles[i];
+        b.draw(ctx);
     }
-   
-  }
-  //deplacer les ball
-  function deplaceLesBalles() {
+
+}
+function removeLesBalles() {
+    
+    // Si il y a au moins une collision on affiche message sur la console 
+    if (collision) {
+        console.log("ball touche");
+    }
+}
+
+//deplacer les ball
+function deplaceLesBalles() {
     // Méthode 1
-    var collision = false;
-    
-   tableauDesBalles.forEach((b, index) => {
-      b.move();
-     
-      // tester Collisions avec les murs
-     if((b.x+b.r) > w) {
-       b.speedX = -b.speedX;
-       b.x = w-b.r;
-     }
-     if((b.x-b.r) < 0) {
-       b.speedX = -b.speedX;
-       b.x = b.r;
-     }
-     if((b.y+b.r) > h) {
-       b.speedY = -b.speedY;
-       b.y = h - b.r;
-     }
-     if((b.y-b.r) < 0) {
-       b.speedY = -b.speedY;
-       b.y = b.r;
-     }
-     /*
-      if(testBallObstacle(b)) {
-      console.log(" ###### COLLISION");
-     }  
-     if(testRectObstacle(monstre)) {
-      console.log("COLLISION11");
-     }
-     */
-     // Ici test de collision avec le monstre
-    
-  
-     if(circRectsOverlap(joueur.x, joueur.y, joueur.l, joueur.h, b.x, b.y, b.r)) {
-       collision = true;
-     }
+    let collision = false;
+
+    tableauDesBalles.forEach((b, index) => {
+        b.move();
+
+        // tester Collisions avec les murs et avec le joueur
+        if ((b.x + b.r) > w) {
+            b.speedX = -b.speedX;
+            b.x = w - b.r;
+        }
+        if ((b.x - b.r) < 0) {
+            b.speedX = -b.speedX;
+            b.x = b.r;
+        }
+        if ((b.y + b.r) > h) {
+            b.speedY = -b.speedY;
+            b.y = h - b.r;
+        }
+        if ((b.y - b.r) < 0) {
+            b.speedY = -b.speedY;
+            b.y = b.r;
+        }
+        //test collision avec joueur 
+        if (circRectsOverlap(joueur.x, joueur.y, joueur.l, joueur.h, b.x, b.y, b.r)) {
+            console.log("touche !");
+            tableauDesBalles.splice(index, 1);
+        }
+
     });
-     /*
-     // Si il y a au moins une collision on change la couleur
-     if(collision) {
-       joueur.couleur = "white";
-     } else {
-       joueur.couleur = "black";
-     }*/
-    
-  }
-  //creer des ball
-   function creerDesBalles(n) {
+}
+//creer des ball
+function creerDesBalles(n) {
     var tabCouleur = ["red", "orange", "green"];
-    
-    for(var i = 0; i < n; i++) {
-      var x = Math.random() * w; // entre 0 et largeur du canvas
-      var y = Math.random() * h; // entre 0 et heuteur du canvas
-      var rayon = 10 + 10*Math.random();
-      var numCouleur = Math.round(Math.random() * tabCouleur.length);
-      var couleur = tabCouleur[numCouleur];
-      var speedX = Math.random() * 5;
-      var speedY = Math.random() * 5;
-  
-      var b = new Balle(x, y, rayon, couleur, speedX, speedY);
-      
-      // Vérifier qu'elle n'est pas sur le
-      // monstre
-      if(circRectsOverlap(joueur.x, joueur.y, joueur.l, joueur.h, b.x, b.y, b.r*5)) {
-        i--;
-      } else {
-      // tableauDesBalles[i] = b;
-        tableauDesBalles.push(b);
-      }
+
+    for (var i = 0; i < n; i++) {
+        var x = Math.random() * w; // entre 0 et largeur du canvas
+        var y = Math.random() * h; // entre 0 et heuteur du canvas
+        var rayon = 10 + 10 * Math.random();
+        var numCouleur = Math.round(Math.random() * tabCouleur.length);
+        var couleur = tabCouleur[numCouleur];
+        var speedX = Math.random() * 5;
+        var speedY = Math.random() * 5;
+
+        var b = new Balle(x, y, rayon, couleur, speedX, speedY);
+
+
+        if (circRectsOverlap(joueur.x, joueur.y, joueur.l, joueur.h, b.x, b.y, b.r * 5)) {
+            i--;
+        } else {
+
+            tableauDesBalles.push(b);
+        }
     }
-  }
+}
 
 
 
