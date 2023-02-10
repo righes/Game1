@@ -11,17 +11,19 @@ import Balle from './Ball.js';
 import Enemy from './Enemy.js';
 
 import { tabNiveaux } from './levels.js';
-
+import Timer from './Timer.js';
 
 let canvas, ctx;
 let gameState = 'menuStart';
+
+let timer;
 let joueur, sortie, luk;
 let niveau = 0;
 let tableauDesObjetsGraphiques = [];
 let assets;
 let w, h;
 let score = 0;
-let vie = 1;
+let vie = 3;
 
 // Les balles
 let tableauDesBalles = [];
@@ -32,10 +34,10 @@ let tableauDesEnemies = [];
 
 
 var assetsToLoadURLs = {
-    joueur: { url: '../assets/images/isfanja.png'}, // http://www.clipartlord.com/category/weather-clip-art/winter-clip-art/
+    joueur: { url: './assets/images/isfanja.png'}, // http://www.clipartlord.com/category/weather-clip-art/winter-clip-art/
     backgroundImage: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/images/background.png' }, // http://www.clipartlord.com/category/weather-clip-art/winter-clip-art/
     plop: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/sounds/plop.mp3', buffer: false, loop: false, volume: 1.0 },
-    victory: { url: '../assets/audio/victory.wav', buffer: false, loop: false, volume: 1.0 },
+    victory: { url: './assets/audio/victory.wav', buffer: false, loop: false, volume: 1.0 },
     humbug: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/sounds/humbug.mp3', buffer: true, loop: true, volume: 0.5 },
     concertino: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/sounds/christmas_concertino.mp3', buffer: true, loop: true, volume: 1.0 },
     xmas: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/sounds/xmas.mp3', buffer: true, loop: true, volume: 0.6 },
@@ -71,6 +73,8 @@ function init(event) {
 
 function startGame(assetsLoaded) {
     assets = assetsLoaded;
+    timer = new Timer("decompte");
+
     //backgrtoun music
     assets.songsong.play();
     // appelée quand tous les assets sont chargés
@@ -97,15 +101,17 @@ function demarreNiveau(niveau) {
         return;
     }
     // sinon on passe au niveau suivant
-
+    timer.stop();
+    timer.setTime(tabNiveaux[niveau].temps);
+    timer.start();
     // On initialise les objets graphiques qu'on va utiliser pour le niveau
     // courant avec les objets graphiques dans tabNiveaux[niveau]   
     tableauDesObjetsGraphiques = [...tabNiveaux[niveau].objetsGraphiques];
     // On crée le joueur   
     joueur = new Joueur(100, 0, 80, 90, assets.joueur, 3);
     //sortie = new Sortie(x, y, r, couleur, assets.dar, 3);
-    creerDesEnemies(5);
-    creerDesBalles(5);
+    creerDesEnemies(20);
+    creerDesBalles(20);
     sortie = tabNiveaux[niveau].sortie;
     //sortie = tabNiveaux[niveau].assets.dar;
 
@@ -181,6 +187,7 @@ function animationLoop() {
             deplaceLesEnemies();
             // 3 - on déplace les objets
             testeEtatClavierPourJoueur();
+            timer.draw(ctx, 150, 30);
 
             joueur.move();
             //joueur.followMouse()
@@ -188,6 +195,7 @@ function animationLoop() {
             detecteCollisionJoueurAvecObstacles();
             detecteCollisionJoueurAvecSortie();
             break;
+
     }
 
     // 4 - On rappelle la fonction d'animation
@@ -209,9 +217,9 @@ function afficheMenuStart(ctx) {
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'white';
-    ctx.font = "130px Arial";
-    ctx.fillText("Press space to start", 190, 100);
-    ctx.strokeText("Press space to start", 190, 100);
+    ctx.font = "80px Arial";
+    ctx.fillText("Press space to start", 60, 60);
+    ctx.strokeText("Press space to start", 60, 60);
     if (inputState.space) {
         gameState = 'jeuEnCours';
     }
@@ -471,13 +479,16 @@ function deplaceLesEnemies() {
             tableauDesEnemies.splice(index, 1);
         }
         if(vie === 0){
-            assets.evilaugh.currentTime = 0;
-            assets.evilaugh.play();
-            gameState = 'gameOver';
-            setTimeout(function () {
-                gameState = 'menuStart';
-              }, 100);
+            //assets.evilaugh.currentTime = 0;
+            //assets.evilaugh.play();
+            //gameState = 'gameOver';
+            
+            gameState = 'menuStart';
+            niveau = 1;
+            vie = 3;
+            score = 0;
             }
+
 
     });
 }
@@ -512,8 +523,6 @@ function afficheVie(ctx) {
     ctx.fillText("Vies: " + vie, 10, 70);
     ctx.restore();
 }
-
-
 
 
 

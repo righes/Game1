@@ -4,7 +4,6 @@ export default class Sortie extends ObjetGraphique {
     constructor(x, y, r, couleur) {
         super(x, y, 2*r, 2*r, couleur);
         this.r = r;
-        this.active = false;
     }
 
     draw(ctx) {
