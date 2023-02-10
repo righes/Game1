@@ -349,6 +349,7 @@ function deplaceLesBalles() {
     let collision = false;
 
     tableauDesBalles.forEach((b, index) => {
+        ctx.drawImage(assets.fish, b.x-b.r, b.y-b.r);
         b.move();
 
         // tester Collisions avec les murs et avec le joueur
