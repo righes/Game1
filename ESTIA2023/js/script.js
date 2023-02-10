@@ -14,6 +14,7 @@ import Timer from './Timer.js';
 
 let canvas, ctx;
 let gameState = 'menuStart';
+
 let timer;
 let joueur, sortie, luk;
 let niveau = 0;
@@ -206,9 +207,9 @@ function afficheMenuStart(ctx) {
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'white';
-    ctx.font = "130px Arial";
-    ctx.fillText("Press space to start", 190, 100);
-    ctx.strokeText("Press space to start", 190, 100);
+    ctx.font = "80px Arial";
+    ctx.fillText("Press space to start", 60, 60);
+    ctx.strokeText("Press space to start", 60, 60);
     if (inputState.space) {
         gameState = 'jeuEnCours';
     }
