@@ -8,6 +8,7 @@ import { circRectsOverlap, rectsOverlap } from './collisions.js';
 import { loadAssets } from './assets.js';
 import Sortie from './Sortie.js';
 import Balle from './Ball.js';
+import Enemy from './Enemy.js';
 
 import { tabNiveaux } from './levels.js';
 
@@ -20,10 +21,13 @@ let tableauDesObjetsGraphiques = [];
 let assets;
 let w, h;
 let score = 0;
+let vie = 1;
 
 // Les balles
 let tableauDesBalles = [];
 let tableauDesObstacles = [];
+// Enemis
+let tableauDesEnemies = [];
 
 
 
@@ -36,9 +40,11 @@ var assetsToLoadURLs = {
     concertino: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/sounds/christmas_concertino.mp3', buffer: true, loop: true, volume: 1.0 },
     xmas: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/sounds/xmas.mp3', buffer: true, loop: true, volume: 0.6 },
     backinblack: { url: '../assets/audio/backinblack.m4a', buffer: true, loop: true, volume: 0.5 },
-    songsong: { url: '../assets/audio/MBC.mp3', buffer: true, loop: true, volume: 0.6 },
+    songsong: { url: '../assets/audio/MBC.mp3', buffer: true, loop: true, volume: 0.2 },
     dar: { url: '../assets/images/house.png'}, // http://www.clipartlord.com/category/weather-clip-art/winter-clip-art/
     fish: { url: '../assets/images/fish.png'},
+    dutch: { url: '../assets/images/dutchman.png'},
+    evilaugh:{ url: '../assets/audio/laugh.wav', buffer: true, loop: true, volume: 0.5 },
 };
 
 // Bonne pratique : on attend que la page soit chargée
@@ -66,7 +72,7 @@ function init(event) {
 function startGame(assetsLoaded) {
     assets = assetsLoaded;
     //backgrtoun music
-    //assets.songsong.play();
+    assets.songsong.play();
     // appelée quand tous les assets sont chargés
     console.log("StartGame : tous les assets sont chargés");
     //assets.backinblack.play();
@@ -96,9 +102,10 @@ function demarreNiveau(niveau) {
     // courant avec les objets graphiques dans tabNiveaux[niveau]   
     tableauDesObjetsGraphiques = [...tabNiveaux[niveau].objetsGraphiques];
     // On crée le joueur   
-    joueur = new Joueur(100, 0, 50, 50, assets.joueur, 3);
+    joueur = new Joueur(100, 0, 80, 90, assets.joueur, 3);
     //sortie = new Sortie(x, y, r, couleur, assets.dar, 3);
-    creerDesBalles(10);
+    creerDesEnemies(5);
+    creerDesBalles(5);
     sortie = tabNiveaux[niveau].sortie;
     //sortie = tabNiveaux[niveau].assets.dar;
 
@@ -153,6 +160,7 @@ function animationLoop() {
             //ctx.drawImage(assets.bgn1, 0/*ximg++*/, 0, canvas.width, canvas.height);
             //*************************************************************************************************score*************/
             afficheScore(ctx);
+            afficheVie(ctx);
             // 2 - On dessine le nouveau contenu
             tableauDesObjetsGraphiques.forEach(o => {
                 if(tableauDesBalles.length === 0){
@@ -166,9 +174,11 @@ function animationLoop() {
             });
             //b1.draw();
             dessinerLesBalles();
+            dessinerLesEnemies();
             //dessinerLesObstacles();
             // 3) On déplace le monstre
             deplaceLesBalles();
+            deplaceLesEnemies();
             // 3 - on déplace les objets
             testeEtatClavierPourJoueur();
 
@@ -207,6 +217,8 @@ function afficheMenuStart(ctx) {
     }
     ctx.restore();
 }
+
+//game over if collision avec Enemy
 function afficheGameOver(ctx) {
     ctx.save();
     ctx.fillStyle = 'black';
@@ -349,7 +361,7 @@ function deplaceLesBalles() {
     let collision = false;
 
     tableauDesBalles.forEach((b, index) => {
-        ctx.drawImage(assets.fish, b.x-b.r, b.y-b.r);
+        ctx.drawImage(assets.fish, b.x-b.r-2, b.y-b.r);
         b.move();
 
         // tester Collisions avec les murs et avec le joueur
@@ -410,9 +422,98 @@ function afficheScore(ctx) {
     ctx.fillText("Score: " + score, 10, 30);
     ctx.restore();
 }
+//***********************************************************************************************************************//
+//*****************************************Enemy*************************************************************************//
+//***********************************************************************************************************************//
+
+function dessinerLesEnemies() {
+    // Méthode 1
+    for (var i = 0; i < tableauDesEnemies.length; i++) {
+        var n = tableauDesEnemies[i];
+        n.draw(ctx);
+    }
+
+}
+
+
+//deplacer les enemies
+function deplaceLesEnemies() {
+    // Méthode 1
+    let collision = false;
+
+    tableauDesEnemies.forEach((n, index) => {
+        ctx.drawImage(assets.dutch, n.x-3*n.r, n.y-3*n.r);
+        n.move();
+
+        // tester Collisions avec les murs et avec le joueur
+        if ((n.x + n.r) > w) {
+            n.speedX = -n.speedX;
+            n.x = w - n.r;
+        }
+        if ((n.x - n.r) < 0) {
+            n.speedX = -n.speedX;
+            n.x = n.r;
+        }
+        if ((n.y + n.r) > h) {
+            n.speedY = -n.speedY;
+            n.y = h - n.r;
+        }
+        if ((n.y - n.r) < 0) {
+            n.speedY = -n.speedY;
+            n.y = n.r;
+        }
+        //test collision avec joueur 
+        if (circRectsOverlap(joueur.x, joueur.y, joueur.l, joueur.h, n.x, n.y, n.r)) {
+            console.log("die ! XXXXXXXXXXXXXXXXXXXXXXX");
+            //gameState = 'gameOver';
+            vie--;
+            console.log("vie :" + vie);
+            tableauDesEnemies.splice(index, 1);
+        }
+        if(vie === 0){
+            assets.evilaugh.currentTime = 0;
+            assets.evilaugh.play();
+            gameState = 'gameOver';
+            setTimeout(function () {
+                gameState = 'menuStart';
+              }, 100);
+            }
+
+    });
+}
+//creer des ball
+function creerDesEnemies(n) {
+    var tabCouleur = ["black", "black", "black"];
+
+    for (var i = 0; i < n; i++) {
+        var x = Math.random() * w; // entre 0 et largeur du canvas
+        var y = Math.random() * h; // entre 0 et heuteur du canvas
+        var rayon = 10 + 10 * Math.random();
+        var numCouleur = Math.round(Math.random() * tabCouleur.length);
+        var couleur = tabCouleur[numCouleur];
+        var speedX = Math.random() * 5;
+        var speedY = Math.random() * 5;
+
+        var n = new Enemy(x, y, rayon, couleur, speedX, speedY);
+
+
+        if (circRectsOverlap(joueur.x, joueur.y, joueur.l, joueur.h, n.x, n.y, n.r * 5)) {
+            i--;
+        } else {
+
+            tableauDesEnemies.push(n);
+        }
+    }
+}
+function afficheVie(ctx) {
+    ctx.save();
+    ctx.fillStyle = 'black';
+    ctx.font = "30px Arial";
+    ctx.fillText("Vies: " + vie, 10, 70);
+    ctx.restore();
+}
 
 
 
-game.start();
 
 
