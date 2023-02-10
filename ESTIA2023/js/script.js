@@ -148,7 +148,8 @@ function animationLoop() {
             //ximg++;
             //ximg = ximg % canvas.width;
             //ctx.drawImage(assets.bgn1, 0/*ximg++*/, 0, canvas.width, canvas.height);
-
+            //*************************************************************************************************score*************/
+            afficheScore(ctx);
             // 2 - On dessine le nouveau contenu
             tableauDesObjetsGraphiques.forEach(o => {
                 if(tableauDesBalles.length === 0){
@@ -392,6 +393,13 @@ function creerDesBalles(n) {
             tableauDesBalles.push(b);
         }
     }
+}
+function afficheScore(ctx) {
+    ctx.save();
+    ctx.fillStyle = 'black';
+    ctx.font = "30px Arial";
+    ctx.fillText("Score: " + score, 10, 30);
+    ctx.restore();
 }
 
 
