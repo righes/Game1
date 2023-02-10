@@ -1,6 +1,10 @@
 h1 {
     color:red;
 }
+body {
+    background: url("../assets/images/arrimg.jpg");
+    
+}
 
 #myCanvas {
     border: 1px solid black;

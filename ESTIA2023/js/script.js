@@ -28,9 +28,7 @@ let tableauDesObstacles = [];
 
 
 var assetsToLoadURLs = {
-    joueur: { url: '../assets/images/isfanja.png' }, // http://www.clipartlord.com/category/weather-clip-art/winter-clip-art/
-    
-    
+    joueur: { url: '../assets/images/isfanja.png'}, // http://www.clipartlord.com/category/weather-clip-art/winter-clip-art/
     backgroundImage: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/images/background.png' }, // http://www.clipartlord.com/category/weather-clip-art/winter-clip-art/
     plop: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/sounds/plop.mp3', buffer: false, loop: false, volume: 1.0 },
     victory: { url: '../assets/audio/victory.wav', buffer: false, loop: false, volume: 1.0 },
@@ -38,7 +36,9 @@ var assetsToLoadURLs = {
     concertino: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/sounds/christmas_concertino.mp3', buffer: true, loop: true, volume: 1.0 },
     xmas: { url: 'https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/sounds/xmas.mp3', buffer: true, loop: true, volume: 0.6 },
     backinblack: { url: '../assets/audio/backinblack.m4a', buffer: true, loop: true, volume: 0.5 },
-    songsong: { url: '../assets/audio/MBC.mp3', buffer: true, loop: true, volume: 0.6 }
+    songsong: { url: '../assets/audio/MBC.mp3', buffer: true, loop: true, volume: 0.6 },
+    dar: { url: '../assets/images/house.png'}, // http://www.clipartlord.com/category/weather-clip-art/winter-clip-art/
+    fish: { url: '../assets/images/fish.png'},
 };
 
 // Bonne pratique : on attend que la page soit chargée
@@ -97,8 +97,11 @@ function demarreNiveau(niveau) {
     tableauDesObjetsGraphiques = [...tabNiveaux[niveau].objetsGraphiques];
     // On crée le joueur   
     joueur = new Joueur(100, 0, 50, 50, assets.joueur, 3);
+    //sortie = new Sortie(x, y, r, couleur, assets.dar, 3);
     creerDesBalles(10);
     sortie = tabNiveaux[niveau].sortie;
+    //sortie = tabNiveaux[niveau].assets.dar;
+
     // et on l'ajoute au tableau des objets graphiques
     tableauDesObjetsGraphiques.push(joueur);
 
@@ -154,6 +157,10 @@ function animationLoop() {
             tableauDesObjetsGraphiques.forEach(o => {
                 if(tableauDesBalles.length === 0){
                     sortie.active = true;
+                    //draw dar sur la sortie 
+                    ctx.drawImage(assets.dar, sortie.x-150, sortie.y-315);
+                    
+                    score = 0;
                 }
                 o.draw(ctx);
             });
@@ -239,6 +246,7 @@ function testeEtatClavierPourJoueur() {
 
 
 function exempleDessin() {
+    
     ctx.lineWidth = 20
     ctx.strokeStyle = 'green';
     ctx.strokeRect(10, y, 100, 150);
